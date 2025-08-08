@@ -1,7 +1,7 @@
 <script>
     import { createEventDispatcher } from 'svelte';
     import QRCode from 'qrcode';
-    import { getPromptPayPayload } from '$lib/api';
+    import { getPromptPayPayload, createSale } from '$lib/api';
 
     export let items = []; // Receives cart items as a prop
 
@@ -54,10 +54,29 @@
         }
     }
 
+    async function processSale() {
+        error = null;
+        const saleItems = items.map(item => ({
+            product_id: item.id,
+            quantity: item.quantity,
+        }));
+
+        try {
+            await createSale(saleItems);
+            // On success, clear the cart
+            dispatch('clearCart');
+        } catch (e) {
+            // If the backend returns an error (e.g. insufficient stock), display it
+            const errorData = await e.response.json();
+            error = errorData.detail || 'Failed to process sale.';
+        }
+    }
+
     function closeModal() {
         showQRModal = false;
-        // Optionally, clear the cart after payment modal is closed
-        dispatch('clearCart');
+        // After closing the QR modal, we assume payment was successful
+        // and proceed to record the sale and deduct stock.
+        processSale();
     }
 </script>
 

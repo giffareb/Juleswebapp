@@ -10,14 +10,12 @@
 
     onMount(async () => {
         try {
-            // Let's create some mock products for now, as the DB will be empty on first run
-            products = [
-                { id: 1, name: 'Latte', price: 50, description: 'Coffee with milk' },
-                { id: 2, name: 'Espresso', price: 40, description: 'Strong coffee shot' },
-                { id: 3, name: 'Croissant', price: 35, description: 'Buttery pastry' },
-            ];
-            // You can uncomment this to fetch from the actual API
-            // products = await getProducts();
+            // Fetch products from the actual API
+            products = await getProducts();
+            if (products.length === 0) {
+                // You can add a default product if the database is empty
+                // to make testing easier on the first run.
+            }
         } catch (e) {
             error = e.message;
         } finally {
