@@ -4,7 +4,7 @@ FROM node:18-alpine
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json (if available)
+# Copy package.json and package-lock.json
 COPY package*.json ./
 
 # Install dependencies
@@ -13,9 +13,11 @@ RUN npm install
 # Copy the rest of the application's code
 COPY . .
 
-# Expose the port the app runs on
-EXPOSE 5173
+# Build the SvelteKit application
+RUN npm run build
 
-# Command to run the application in development mode
-# The `-- --host` is important to expose the server to the Docker network
-CMD ["npm", "run", "dev", "--", "--host"]
+# Expose the port the app runs on
+EXPOSE 3000
+
+# Command to run the production server
+CMD ["node", "build/index.js"]
