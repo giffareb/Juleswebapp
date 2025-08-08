@@ -4,9 +4,9 @@ from pydantic import BaseModel
 from typing import List, Optional
 from sqlmodel import Session, select
 
-from backend.database import create_db_and_tables, get_session
-from backend.models import Product, Sale, SaleItem # Import SaleItem
-from backend import promptpay_utils
+from database import create_db_and_tables, get_session
+from models import Product, Sale, SaleItem # Import SaleItem
+import promptpay_utils
 
 # Create the FastAPI app
 app = FastAPI(
